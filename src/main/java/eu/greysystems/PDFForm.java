@@ -42,6 +42,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,23 +60,34 @@ final class PDFForm {
     private static final String OPT_H = "h";
     private static final String PROGRAM_VERSION = "1.0.0";
     private static final String PROGRAM_NAME = "pdfform";
+    private static final int LIST = 1;
+    private static final int DUMP = 2;
     private static String separator = ",";
     private static String[] fields;
     private static String[] files;
     private static boolean printHeader;
     private static boolean verbose;
+    private static int command;
 
     public static void main(String args[]) {
         Logger.getLogger("org.apache.pdfbox").setLevel(Level.OFF);
 
         try {
-            parseArgs(args);
+            final String[] cmdArgs = parseCommand(args);
+            parseArgs(cmdArgs);
             checkArgs();
 
-            if (printHeader) System.out.println(StringUtils.join(fields, separator));
+            switch (command) {
+                case LIST:
+                    throw new UnsupportedOperationException("This command is not yet implemented.");
 
-            for (String file : files) {
-                process(file, fields, separator);
+                case DUMP:
+                    dump();
+                    break;
+
+                default:
+                    System.err.println("Unknown command code: " + command);
+                    System.exit(1);
             }
         } catch (ParseException e) {
             System.err.printf("Syntax error: %s%n", e.getMessage());
@@ -90,6 +102,38 @@ final class PDFForm {
             printException(e);
             System.exit(5);
         }
+    }
+
+    private static void dump() throws IOException, CryptographyException {
+        if (printHeader) System.out.println(StringUtils.join(fields, separator));
+
+        for (String file : files) {
+            process(file, fields, separator);
+        }
+
+    }
+
+    private static String[] parseCommand(String[] args) throws ParseException {
+        if (args.length == 0) {
+            System.err.println("Missing argument.");
+            System.exit(1);
+        }
+
+        switch (args[0]) {
+            case "list":
+                command = LIST;
+                break;
+
+            case "dump":
+                command = DUMP;
+                break;
+
+            default:
+                System.err.printf("Unknown command: %s%n", args[0]);
+                System.exit(6);
+        }
+
+        return Arrays.copyOfRange(args, 1, args.length);
     }
 
     private static void printException(Exception e) {
