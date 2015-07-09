@@ -259,6 +259,8 @@ final class PDFForm {
             final PDDocumentCatalog documentCatalog = document.getDocumentCatalog();
             final PDAcroForm acrobatForm = documentCatalog.getAcroForm();
 
+            if (acrobatForm == null) return;
+
             List<String> values = new ArrayList<>();
 
             for (String field : fields) {
