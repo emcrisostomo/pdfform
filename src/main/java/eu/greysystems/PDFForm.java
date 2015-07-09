@@ -79,7 +79,8 @@ final class PDFForm {
 
             switch (command) {
                 case LIST:
-                    throw new UnsupportedOperationException("This command is not yet implemented.");
+                    list();
+                    break;
 
                 case DUMP:
                     dump();
@@ -104,13 +105,42 @@ final class PDFForm {
         }
     }
 
+    private static void list() throws IOException, CryptographyException {
+        for (String file : files) {
+            listFieldsOf(file, separator);
+        }
+    }
+
+    private static void listFieldsOf(String file, String separator) throws IOException, CryptographyException {
+        try (PDDocument document = PDDocument.load(file)) {
+            if (document.isEncrypted()) {
+                document.decrypt("");
+                document.setAllSecurityToBeRemoved(true);
+            }
+
+            final PDDocumentCatalog documentCatalog = document.getDocumentCatalog();
+            final PDAcroForm acrobatForm = documentCatalog.getAcroForm();
+
+            if (acrobatForm == null) return;
+
+            List<?> fields = acrobatForm.getFields();
+            List<String> fieldNames = new ArrayList<>();
+
+            for (Object o : fields) {
+                PDField field = (PDField) o;
+                fieldNames.add(field.getFullyQualifiedName());
+            }
+
+            System.out.println(StringUtils.join(fieldNames, separator));
+        }
+    }
+
     private static void dump() throws IOException, CryptographyException {
         if (printHeader) System.out.println(StringUtils.join(fields, separator));
 
         for (String file : files) {
             process(file, fields, separator);
         }
-
     }
 
     private static String[] parseCommand(String[] args) throws ParseException {
