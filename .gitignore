@@ -12,4 +12,10 @@
 hs_err_pid*
 
 # Maven build directory
-target/
+target/*
+
+# IntelliJ IDEA
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dataSources.*
+out/*
