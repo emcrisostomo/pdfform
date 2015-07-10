@@ -189,7 +189,7 @@ public class DumpCommand implements Command {
         System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
         System.out.println("");
         System.out.println("Usage:");
-        System.out.printf("%s (option)* (-f field)+ path*%n", PDFForm.getProgramName());
+        System.out.printf("  %s (option)* (-f field)+ path*%n", PDFForm.getProgramName());
         System.out.println("");
         System.out.println("Options:");
         System.out.println("");

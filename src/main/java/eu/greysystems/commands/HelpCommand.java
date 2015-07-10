@@ -33,17 +33,31 @@ package eu.greysystems.commands;
 
 import eu.greysystems.PDFForm;
 import eu.greysystems.PDFFormException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Enrico M. Crisostomo
  */
 public class HelpCommand implements Command {
+    private final String[] args;
+
     public HelpCommand(String[] args) {
+        this.args = args;
     }
 
     @Override
     public void run() throws PDFFormException {
-        printUsage();
+        if (args.length == 0) {
+            printUsage();
+            return;
+        } else if (args.length > 1) {
+            System.err.println("Invalid argument: " + StringUtils.join(args, " "));
+            printUsage();
+            return;
+        }
+
+        final Command helpCommand = Commands.createFromArguments(args);
+        helpCommand.printUsage();
     }
 
     @Override
@@ -56,11 +70,15 @@ public class HelpCommand implements Command {
         System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
         System.out.println("");
         System.out.println("Usage:");
-        System.out.printf("%s command (arguments)*%n", PDFForm.getProgramName());
+        System.out.printf("  %s command (arguments)*%n", PDFForm.getProgramName());
         System.out.println("");
         System.out.println("Commands:");
-        System.out.println("  list\tList the fields in a PDF form.");
         System.out.println("  dump\tDump the contents of a PDF form.");
+        System.out.println("  help\tPrints the usage of the specified command.");
+        System.out.println("  list\tList the fields in a PDF form.");
+        System.out.println("");
+        System.out.println("To read the help of a specific command:");
+        System.out.printf("  %s help command%n", PDFForm.getProgramName());
         System.out.println("");
         System.out.println("Report bugs to <enrico.m.crisostomo@gmail.com>.");
     }
