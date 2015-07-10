@@ -184,7 +184,8 @@ public class DumpCommand implements Command {
         }
     }
 
-    private void printUsage() {
+    @Override
+    public void printUsage() {
         System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
         System.out.println("");
         System.out.println("Usage:");

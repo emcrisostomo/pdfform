@@ -42,4 +42,6 @@ public interface Command {
     void run() throws PDFFormException;
 
     boolean isVerbose();
+
+    void printUsage();
 }

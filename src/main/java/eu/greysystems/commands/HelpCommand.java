@@ -35,9 +35,6 @@ import eu.greysystems.PDFForm;
 import eu.greysystems.PDFFormException;
 
 /**
- * Date: 10/07/15
- * Time: 14:50
- *
  * @author Enrico M. Crisostomo
  */
 public class HelpCommand implements Command {
@@ -54,7 +51,8 @@ public class HelpCommand implements Command {
         return true;
     }
 
-    private void printUsage() {
+    @Override
+    public void printUsage() {
         System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
         System.out.println("");
         System.out.println("Usage:");
