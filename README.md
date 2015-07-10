@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/emcrisostomo/pdfform.svg?branch=develop)](https://travis-ci.org/emcrisostomo/pdfform)
 [![License](https://img.shields.io/badge/license-BSD--3-blue.svg?style=flat)](https://github.com/emcrisostomo/pdfform/blob/master/LICENSE)
 
 pdfform
