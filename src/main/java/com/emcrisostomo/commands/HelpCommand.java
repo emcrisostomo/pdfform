@@ -29,50 +29,54 @@
  *
  */
 
-package eu.greysystems.commands;
+package com.emcrisostomo.commands;
 
-import eu.greysystems.PDFFormException;
-import org.apache.commons.cli.ParseException;
-
-import java.util.Arrays;
+import com.emcrisostomo.PDFForm;
+import com.emcrisostomo.PDFFormException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Enrico M. Crisostomo
- * @version 1.0.0
- * @since 1.0.0
  */
-public final class Commands {
-    public static Command createFromArguments(String[] args) throws PDFFormException {
-        if (args == null || args.length == 0) {
-            throw new IllegalArgumentException("Arguments cannot be emtpy.");
+public class HelpCommand extends BaseCommand {
+    private final String[] args;
+
+    public HelpCommand(String name, String[] args) {
+        super(name);
+        this.args = args;
+    }
+
+    @Override
+    public void run() throws PDFFormException {
+        if (args.length == 0) {
+            printUsage();
+            return;
+        } else if (args.length > 1) {
+            System.err.println("Invalid argument: " + StringUtils.join(args, " "));
+            printUsage();
+            return;
         }
 
-        final String[] options = Arrays.copyOfRange(args, 1, args.length);
-        Command command;
+        final Command helpCommand = Commands.createFromArguments(args);
+        helpCommand.printUsage();
+    }
 
-        try {
-            final String commandName = args[0];
+    @Override
+    public boolean isVerbose() {
+        return true;
+    }
 
-            switch (commandName) {
-                case "dump":
-                    command = new DumpCommand(commandName, options);
-                    break;
-
-                case "help":
-                    command = new HelpCommand(commandName, options);
-                    break;
-
-                case "list":
-                    command = new ListCommand(commandName, options);
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Unknown command: " + commandName);
-            }
-
-            return command;
-        } catch (ParseException e) {
-            throw new PDFFormException(e);
-        }
+    @Override
+    public void doPrintUsage() {
+        System.out.println("Usage:");
+        System.out.printf("  %s %s command (arguments)*%n", PDFForm.getProgramName(), getName());
+        System.out.println("");
+        System.out.println("Commands:");
+        System.out.println("  dump\tDump the contents of a PDF form.");
+        System.out.println("  help\tPrints the usage of the specified command.");
+        System.out.println("  list\tList the fields in a PDF form.");
+        System.out.println("");
+        System.out.println("To read the help of a specific command:");
+        System.out.printf("  %s help command%n", PDFForm.getProgramName());
     }
 }
