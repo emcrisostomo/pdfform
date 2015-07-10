@@ -52,9 +52,9 @@ public class OptionString {
     @Override
     public String toString() {
         if (option.getLongOpt() == null) {
-            return String.format("  -%s\t%s", option.getOpt(), option.getDescription());
+            return String.format("  -%-24s %s", option.getOpt(), option.getDescription());
         } else {
-            return String.format("  -%s, --%s\t%s", option.getOpt(), option.getLongOpt(), option.getDescription());
+            return String.format("  -%s, --%-19s %s", option.getOpt(), option.getLongOpt(), option.getDescription());
         }
     }
 }
