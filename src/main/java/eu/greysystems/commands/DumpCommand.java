@@ -43,8 +43,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Enrico M. Crisostomo
@@ -58,7 +57,7 @@ public class DumpCommand extends BaseCommand {
     private static final String OPT_UH = "H";
     private static final String OPT_H = "h";
     private static String separator = ",";
-    private static String[] fields;
+    private static List<String> fields;
     private static String[] files;
     private static boolean printHeader;
     private static boolean verbose;
@@ -83,7 +82,7 @@ public class DumpCommand extends BaseCommand {
         for (Option opt : cmdOptions) {
             switch (opt.getOpt()) {
                 case OPT_F:
-                    fields = cmd.getOptionValues(OPT_F);
+                    fields = Arrays.asList(cmd.getOptionValues(OPT_F));
                     break;
 
                 case OPT_H:
@@ -116,10 +115,6 @@ public class DumpCommand extends BaseCommand {
         if (files.length == 0) {
             throw new PDFFormException("Missing argument.");
         }
-
-        if (fields == null) {
-            throw new PDFFormException("Missing fields.");
-        }
     }
 
     @Override
@@ -139,15 +134,53 @@ public class DumpCommand extends BaseCommand {
     }
 
     private void dump() throws PDFFormException {
-        if (printHeader) System.out.println(StringUtils.join(fields, separator));
+        try {
+            prepareFields();
+
+            if (printHeader) System.out.println(StringUtils.join(fields, separator));
+
+            for (String file : files) {
+                dumpFieldsInFile(file);
+            }
+        } catch (IOException | CryptographyException e) {
+            throw new PDFFormException(e);
+        }
+    }
+
+    private void prepareFields() throws IOException, CryptographyException {
+        if (fields != null) return;
+
+        fields = getAllFields();
+    }
+
+    private List<String> getAllFields() throws IOException, CryptographyException {
+        Set<String> fieldNames = new HashSet<>();
 
         for (String file : files) {
-            try {
-                dumpFieldsInFile(file);
-            } catch (IOException | CryptographyException e) {
-                throw new PDFFormException(e);
+            try (PDDocument document = PDDocument.load(file)) {
+                if (document.isEncrypted()) {
+                    document.decrypt("");
+                    document.setAllSecurityToBeRemoved(true);
+                }
+
+                final PDDocumentCatalog documentCatalog = document.getDocumentCatalog();
+                final PDAcroForm acrobatForm = documentCatalog.getAcroForm();
+
+                if (acrobatForm == null) continue;
+
+                List<?> formFields = acrobatForm.getFields();
+
+                for (Object o : formFields) {
+                    PDField field = (PDField) o;
+                    fieldNames.add(field.getFullyQualifiedName());
+                }
             }
         }
+
+        List<String> fields = new ArrayList<>();
+        fields.addAll(fieldNames);
+
+        return fields;
     }
 
     private void dumpFieldsInFile(String file)
@@ -189,7 +222,7 @@ public class DumpCommand extends BaseCommand {
     @Override
     public void doPrintUsage() {
         System.out.println("Usage:");
-        System.out.printf("  %s %s (option)* (-f field)+ path*%n", PDFForm.getProgramName(), getName());
+        System.out.printf("  %s %s (option)* (-f field)* path*%n", PDFForm.getProgramName(), getName());
         System.out.println("");
         System.out.println("Options:");
         System.out.println("");
