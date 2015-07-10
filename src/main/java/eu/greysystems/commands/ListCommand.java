@@ -157,11 +157,7 @@ public class ListCommand extends BaseCommand {
         System.out.println("");
 
         for (Option opt : options.getOptions()) {
-            if (opt.getLongOpt() == null) {
-                System.out.printf("  -%s\t%s%n", opt.getOpt(), opt.getDescription());
-            } else {
-                System.out.printf("  -%s, --%s\t%s%n", opt.getOpt(), opt.getLongOpt(), opt.getDescription());
-            }
+            System.out.println(new OptionString(opt));
         }
     }
 
