@@ -29,45 +29,45 @@
  *
  */
 
-package eu.greysystems;
+package eu.greysystems.commands;
 
-import eu.greysystems.commands.Command;
-import eu.greysystems.commands.Commands;
+import eu.greysystems.PDFFormException;
+import org.apache.commons.cli.ParseException;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Arrays;
 
 /**
  * @author Enrico M. Crisostomo
  * @version 1.0.0
  * @since 1.0.0
  */
-public final class PDFForm {
-    public static final String PROGRAM_VERSION = "1.0.0";
-    public static final String PROGRAM_NAME = "pdfform";
+public final class Commands {
+    public static Command createFromArguments(String[] args) throws PDFFormException {
+        if (args == null || args.length == 0) {
+            throw new IllegalArgumentException("Arguments cannot be emtpy.");
+        }
 
-    private static boolean verbose;
-
-    public static void main(String args[]) {
-        Logger.getLogger("org.apache.pdfbox").setLevel(Level.OFF);
+        final String[] options = Arrays.copyOfRange(args, 1, args.length);
+        Command command;
 
         try {
-            if (args.length == 0) {
-                System.err.println("Missing command.");
-                System.exit(1);
+            switch (args[0]) {
+                case "list":
+                    command = new ListCommand(options);
+                    break;
+
+                case "dump":
+                    command = new DumpCommand(options);
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Unknown command: " + args[0]);
+
             }
 
-            Command command = Commands.createFromArguments(args);
-            verbose = command.isVerbose();
-            command.run();
-        } catch (Exception e) {
-            System.err.printf("Error: %s: %s%n", e.getClass().getName(), e.getMessage());
-            printException(e);
-            System.exit(5);
+            return command;
+        } catch (ParseException e) {
+            throw new PDFFormException(e);
         }
-    }
-
-    private static void printException(Exception e) {
-        if (verbose) e.printStackTrace(System.err);
     }
 }

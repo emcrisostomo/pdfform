@@ -29,45 +29,17 @@
  *
  */
 
-package eu.greysystems;
+package eu.greysystems.commands;
 
-import eu.greysystems.commands.Command;
-import eu.greysystems.commands.Commands;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import eu.greysystems.PDFFormException;
 
 /**
  * @author Enrico M. Crisostomo
  * @version 1.0.0
  * @since 1.0.0
  */
-public final class PDFForm {
-    public static final String PROGRAM_VERSION = "1.0.0";
-    public static final String PROGRAM_NAME = "pdfform";
+public interface Command {
+    void run() throws PDFFormException;
 
-    private static boolean verbose;
-
-    public static void main(String args[]) {
-        Logger.getLogger("org.apache.pdfbox").setLevel(Level.OFF);
-
-        try {
-            if (args.length == 0) {
-                System.err.println("Missing command.");
-                System.exit(1);
-            }
-
-            Command command = Commands.createFromArguments(args);
-            verbose = command.isVerbose();
-            command.run();
-        } catch (Exception e) {
-            System.err.printf("Error: %s: %s%n", e.getClass().getName(), e.getMessage());
-            printException(e);
-            System.exit(5);
-        }
-    }
-
-    private static void printException(Exception e) {
-        if (verbose) e.printStackTrace(System.err);
-    }
+    boolean isVerbose();
 }
