@@ -29,28 +29,50 @@
  *
  */
 
-package eu.greysystems;
+package com.emcrisostomo.commands;
+
+import com.emcrisostomo.PDFFormException;
+import org.apache.commons.cli.ParseException;
+
+import java.util.Arrays;
 
 /**
  * @author Enrico M. Crisostomo
+ * @version 1.0.0
+ * @since 1.0.0
  */
-public class PDFFormException extends Exception {
-    public PDFFormException() {
-    }
+public final class Commands {
+    public static Command createFromArguments(String[] args) throws PDFFormException {
+        if (args == null || args.length == 0) {
+            throw new IllegalArgumentException("Arguments cannot be emtpy.");
+        }
 
-    public PDFFormException(Throwable cause) {
-        super(cause);
-    }
+        final String[] options = Arrays.copyOfRange(args, 1, args.length);
+        Command command;
 
-    public PDFFormException(String message) {
-        super(message);
-    }
+        try {
+            final String commandName = args[0];
 
-    public PDFFormException(String message, Throwable cause) {
-        super(message, cause);
-    }
+            switch (commandName) {
+                case "dump":
+                    command = new DumpCommand(commandName, options);
+                    break;
 
-    public PDFFormException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+                case "help":
+                    command = new HelpCommand(commandName, options);
+                    break;
+
+                case "list":
+                    command = new ListCommand(commandName, options);
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Unknown command: " + commandName);
+            }
+
+            return command;
+        } catch (ParseException e) {
+            throw new PDFFormException(e);
+        }
     }
 }

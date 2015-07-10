@@ -29,10 +29,10 @@
  *
  */
 
-package eu.greysystems;
+package com.emcrisostomo;
 
-import eu.greysystems.commands.Command;
-import eu.greysystems.commands.Commands;
+import com.emcrisostomo.commands.Command;
+import com.emcrisostomo.commands.Commands;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,7 +74,7 @@ public final class PDFForm {
 
     public static String getProgramName() {
         loadProperties();
-        return properties.getProperty("eu.greysystems.pdfform.name");
+        return properties.getProperty("com.emcrisostomo.pdfform.name");
     }
 
     private static void loadProperties() {
@@ -83,7 +83,7 @@ public final class PDFForm {
         properties = new Properties();
 
         try (InputStream resourceAsStream =
-                     PDFForm.class.getResourceAsStream("/eu/greysystems/version.properties")) {
+                     PDFForm.class.getResourceAsStream("/com/emcrisostomo/version.properties")) {
             if (resourceAsStream == null) throw new IllegalStateException("Cannot find required resource.");
             properties.load(resourceAsStream);
         } catch (IOException e) {
@@ -93,6 +93,6 @@ public final class PDFForm {
 
     public static String getProgramVersion() {
         loadProperties();
-        return properties.getProperty("eu.greysystems.pdfform.version");
+        return properties.getProperty("com.emcrisostomo.pdfform.version");
     }
 }

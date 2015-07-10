@@ -29,38 +29,28 @@
  *
  */
 
-package eu.greysystems.commands;
-
-import eu.greysystems.PDFForm;
+package com.emcrisostomo;
 
 /**
- * Date: 10/07/15
- * Time: 16:30
- *
  * @author Enrico M. Crisostomo
  */
-public abstract class BaseCommand implements Command {
-    private final String name;
-
-    public BaseCommand(String name) {
-        this.name = name;
+public class PDFFormException extends Exception {
+    public PDFFormException() {
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public PDFFormException(Throwable cause) {
+        super(cause);
     }
 
-    @Override
-    public void printUsage() {
-        System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
-        System.out.println("");
-
-        doPrintUsage();
-
-        System.out.println("");
-        System.out.println("Report bugs to <enrico.m.crisostomo@gmail.com>.");
+    public PDFFormException(String message) {
+        super(message);
     }
 
-    protected abstract void doPrintUsage();
+    public PDFFormException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public PDFFormException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

@@ -29,54 +29,38 @@
  *
  */
 
-package eu.greysystems.commands;
+package com.emcrisostomo.commands;
 
-import eu.greysystems.PDFForm;
-import eu.greysystems.PDFFormException;
-import org.apache.commons.lang3.StringUtils;
+import com.emcrisostomo.PDFForm;
 
 /**
+ * Date: 10/07/15
+ * Time: 16:30
+ *
  * @author Enrico M. Crisostomo
  */
-public class HelpCommand extends BaseCommand {
-    private final String[] args;
+public abstract class BaseCommand implements Command {
+    private final String name;
 
-    public HelpCommand(String name, String[] args) {
-        super(name);
-        this.args = args;
+    public BaseCommand(String name) {
+        this.name = name;
     }
 
     @Override
-    public void run() throws PDFFormException {
-        if (args.length == 0) {
-            printUsage();
-            return;
-        } else if (args.length > 1) {
-            System.err.println("Invalid argument: " + StringUtils.join(args, " "));
-            printUsage();
-            return;
-        }
-
-        final Command helpCommand = Commands.createFromArguments(args);
-        helpCommand.printUsage();
+    public String getName() {
+        return name;
     }
 
     @Override
-    public boolean isVerbose() {
-        return true;
-    }
-
-    @Override
-    public void doPrintUsage() {
-        System.out.println("Usage:");
-        System.out.printf("  %s %s command (arguments)*%n", PDFForm.getProgramName(), getName());
+    public void printUsage() {
+        System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
         System.out.println("");
-        System.out.println("Commands:");
-        System.out.println("  dump\tDump the contents of a PDF form.");
-        System.out.println("  help\tPrints the usage of the specified command.");
-        System.out.println("  list\tList the fields in a PDF form.");
+
+        doPrintUsage();
+
         System.out.println("");
-        System.out.println("To read the help of a specific command:");
-        System.out.printf("  %s help command%n", PDFForm.getProgramName());
+        System.out.println("Report bugs to <enrico.m.crisostomo@gmail.com>.");
     }
+
+    protected abstract void doPrintUsage();
 }
