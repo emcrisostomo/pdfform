@@ -34,6 +34,9 @@ package eu.greysystems;
 import eu.greysystems.commands.Command;
 import eu.greysystems.commands.Commands;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,10 +46,8 @@ import java.util.logging.Logger;
  * @since 1.0.0
  */
 public final class PDFForm {
-    public static final String PROGRAM_VERSION = "1.0.0";
-    public static final String PROGRAM_NAME = "pdfform";
-
     private static boolean verbose;
+    private static Properties properties;
 
     public static void main(String args[]) {
         Logger.getLogger("org.apache.pdfbox").setLevel(Level.OFF);
@@ -69,5 +70,29 @@ public final class PDFForm {
 
     private static void printException(Exception e) {
         if (verbose) e.printStackTrace(System.err);
+    }
+
+    public static String getProgramName() {
+        loadProperties();
+        return properties.getProperty("eu.greysystems.pdfform.name");
+    }
+
+    private static void loadProperties() {
+        if (properties != null) return;
+
+        properties = new Properties();
+
+        try (InputStream resourceAsStream =
+                     PDFForm.class.getResourceAsStream("/eu/greysystems/version.properties")) {
+            if (resourceAsStream == null) throw new IllegalStateException("Cannot find required resource.");
+            properties.load(resourceAsStream);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static String getProgramVersion() {
+        loadProperties();
+        return properties.getProperty("eu.greysystems.pdfform.version");
     }
 }

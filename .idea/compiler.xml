@@ -24,6 +24,13 @@
         <processorPath useClasspath="true" />
         <module name="pdf-extractor" />
       </profile>
+      <profile default="false" name="Annotation profile for pdfform" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pdfform" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="pdf-extractor" target="1.7" />

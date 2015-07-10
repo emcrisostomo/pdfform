@@ -94,6 +94,8 @@ public class ListCommand implements Command {
     }
 
     private static void checkArgs() throws PDFFormException {
+        if (help) return;
+
         if (files.length == 0) {
             throw new PDFFormException("Missing argument.");
         }
@@ -145,10 +147,10 @@ public class ListCommand implements Command {
     }
 
     private void printUsage() {
-        System.out.printf("%s %s%n", PDFForm.PROGRAM_NAME, PDFForm.PROGRAM_VERSION);
+        System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
         System.out.println("");
         System.out.println("Usage:");
-        System.out.printf("%s (option)* (-f field)+ path*%n", PDFForm.PROGRAM_NAME);
+        System.out.printf("%s (option)* (-f field)+ path*%n", PDFForm.getProgramName());
         System.out.println("");
         System.out.println("Options:");
         System.out.println("");
