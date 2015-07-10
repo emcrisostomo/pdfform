@@ -31,47 +31,39 @@
 
 package eu.greysystems.commands;
 
+import eu.greysystems.PDFForm;
 import eu.greysystems.PDFFormException;
-import org.apache.commons.cli.ParseException;
-
-import java.util.Arrays;
 
 /**
+ * Date: 10/07/15
+ * Time: 14:50
+ *
  * @author Enrico M. Crisostomo
- * @version 1.0.0
- * @since 1.0.0
  */
-public final class Commands {
-    public static Command createFromArguments(String[] args) throws PDFFormException {
-        if (args == null || args.length == 0) {
-            throw new IllegalArgumentException("Arguments cannot be emtpy.");
-        }
+public class HelpCommand implements Command {
+    public HelpCommand(String[] args) {
+    }
 
-        final String[] options = Arrays.copyOfRange(args, 1, args.length);
-        Command command;
+    @Override
+    public void run() throws PDFFormException {
+        printUsage();
+    }
 
-        try {
-            switch (args[0]) {
-                case "list":
-                    command = new ListCommand(options);
-                    break;
+    @Override
+    public boolean isVerbose() {
+        return true;
+    }
 
-                case "dump":
-                    command = new DumpCommand(options);
-                    break;
-
-                case "help":
-                    command = new HelpCommand(options);
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Unknown command: " + args[0]);
-
-            }
-
-            return command;
-        } catch (ParseException e) {
-            throw new PDFFormException(e);
-        }
+    private void printUsage() {
+        System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
+        System.out.println("");
+        System.out.println("Usage:");
+        System.out.printf("%s command (arguments)*%n", PDFForm.getProgramName());
+        System.out.println("");
+        System.out.println("Commands:");
+        System.out.println("  list\tList the fields in a PDF form.");
+        System.out.println("  dump\tDump the contents of a PDF form.");
+        System.out.println("");
+        System.out.println("Report bugs to <enrico.m.crisostomo@gmail.com>.");
     }
 }
