@@ -139,7 +139,7 @@ final class PDFForm {
         if (printHeader) System.out.println(StringUtils.join(fields, separator));
 
         for (String file : files) {
-            process(file, fields, separator);
+            dumpFieldsInFile(file, fields, separator);
         }
     }
 
@@ -246,7 +246,7 @@ final class PDFForm {
         System.out.println("Report bugs to <enrico.m.crisostomo@gmail.com>.");
     }
 
-    private static void process(String file, String[] fields, String separator)
+    private static void dumpFieldsInFile(String file, String[] fields, String separator)
             throws IOException, CryptographyException {
         if (separator == null) throw new IllegalArgumentException("Separator cannot be null.");
 
