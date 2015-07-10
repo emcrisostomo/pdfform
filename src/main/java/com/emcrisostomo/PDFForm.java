@@ -33,6 +33,7 @@ package com.emcrisostomo;
 
 import com.emcrisostomo.commands.Command;
 import com.emcrisostomo.commands.Commands;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +47,13 @@ import java.util.logging.Logger;
  * @since 1.0.0
  */
 public final class PDFForm {
+    /**
+     * The property names are prefixed by ${groupId}.${artifactId}.
+     */
+    private static final String PACKAGE_NAME = PDFForm.class.getPackage().getName();
+    private static final String PACKAGE_NAME_AS_PATH = PACKAGE_NAME.replaceAll("\\.", "/");
+    private static final String ARTIFACT_ID = "pdfform";
+    private static final String PROPERTIES_PREFIX = StringUtils.join(new String[]{PACKAGE_NAME, ARTIFACT_ID}, ".");
     private static boolean verbose;
     private static Properties properties;
 
@@ -72,18 +80,14 @@ public final class PDFForm {
         if (verbose) e.printStackTrace(System.err);
     }
 
-    public static String getProgramName() {
-        loadProperties();
-        return properties.getProperty("com.emcrisostomo.pdfform.name");
-    }
-
     private static void loadProperties() {
         if (properties != null) return;
 
         properties = new Properties();
 
         try (InputStream resourceAsStream =
-                     PDFForm.class.getResourceAsStream("/com/emcrisostomo/version.properties")) {
+                     PDFForm.class.getResourceAsStream(
+                             String.format("/%s/version.properties", PACKAGE_NAME_AS_PATH))) {
             if (resourceAsStream == null) throw new IllegalStateException("Cannot find required resource.");
             properties.load(resourceAsStream);
         } catch (IOException e) {
@@ -91,8 +95,13 @@ public final class PDFForm {
         }
     }
 
+    public static String getProgramName() {
+        loadProperties();
+        return properties.getProperty(PROPERTIES_PREFIX + ".name");
+    }
+
     public static String getProgramVersion() {
         loadProperties();
-        return properties.getProperty("com.emcrisostomo.pdfform.version");
+        return properties.getProperty(PROPERTIES_PREFIX + ".version");
     }
 }
