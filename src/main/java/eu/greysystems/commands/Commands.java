@@ -51,22 +51,23 @@ public final class Commands {
         Command command;
 
         try {
-            switch (args[0]) {
-                case "list":
-                    command = new ListCommand(options);
-                    break;
+            final String commandName = args[0];
 
+            switch (commandName) {
                 case "dump":
-                    command = new DumpCommand(options);
+                    command = new DumpCommand(commandName, options);
                     break;
 
                 case "help":
-                    command = new HelpCommand(options);
+                    command = new HelpCommand(commandName, options);
+                    break;
+
+                case "list":
+                    command = new ListCommand(commandName, options);
                     break;
 
                 default:
-                    throw new IllegalArgumentException("Unknown command: " + args[0]);
-
+                    throw new IllegalArgumentException("Unknown command: " + commandName);
             }
 
             return command;

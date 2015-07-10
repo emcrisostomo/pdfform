@@ -40,8 +40,10 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class HelpCommand implements Command {
     private final String[] args;
+    private final String name;
 
-    public HelpCommand(String[] args) {
+    public HelpCommand(String name, String[] args) {
+        this.name = name;
         this.args = args;
     }
 
@@ -70,7 +72,7 @@ public class HelpCommand implements Command {
         System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
         System.out.println("");
         System.out.println("Usage:");
-        System.out.printf("  %s command (arguments)*%n", PDFForm.getProgramName());
+        System.out.printf("  %s %s command (arguments)*%n", PDFForm.getProgramName(), getName());
         System.out.println("");
         System.out.println("Commands:");
         System.out.println("  dump\tDump the contents of a PDF form.");
@@ -81,5 +83,10 @@ public class HelpCommand implements Command {
         System.out.printf("  %s help command%n", PDFForm.getProgramName());
         System.out.println("");
         System.out.println("Report bugs to <enrico.m.crisostomo@gmail.com>.");
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

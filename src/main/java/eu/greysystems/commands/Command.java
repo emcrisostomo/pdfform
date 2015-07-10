@@ -44,4 +44,6 @@ public interface Command {
     boolean isVerbose();
 
     void printUsage();
+
+    String getName();
 }

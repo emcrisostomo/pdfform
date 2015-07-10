@@ -59,8 +59,11 @@ public class ListCommand implements Command {
     private static boolean verbose;
     private static boolean help;
     private static String[] files;
+    private final String name;
 
-    public ListCommand(String[] args) throws ParseException {
+    public ListCommand(String name, String[] args) throws ParseException {
+        this.name = name;
+
         options = new Options();
         options.addOption(OPT_S, "separator", true, "Use the specified separator.");
         options.addOption(OPT_H, "help", false, "Print the help message.");
@@ -151,7 +154,7 @@ public class ListCommand implements Command {
         System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
         System.out.println("");
         System.out.println("Usage:");
-        System.out.printf("%s (option)* (-f field)+ path*%n", PDFForm.getProgramName());
+        System.out.printf("  %s %s (option)* (-f field)+ path*%n", PDFForm.getProgramName(), getName());
         System.out.println("");
         System.out.println("Options:");
         System.out.println("");
@@ -166,6 +169,11 @@ public class ListCommand implements Command {
 
         System.out.println("");
         System.out.println("Report bugs to <enrico.m.crisostomo@gmail.com>.");
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
