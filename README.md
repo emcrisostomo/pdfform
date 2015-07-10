@@ -1,5 +1,4 @@
-[![License](https://img.shields.io/badge/license-BSD--3-blue.svg?style=flat)](https://github
-.com/emcrisostomo/pdfform/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-BSD--3-blue.svg?style=flat)](https://github.com/emcrisostomo/pdfform/blob/master/LICENSE)
 
 pdfform
 =======
