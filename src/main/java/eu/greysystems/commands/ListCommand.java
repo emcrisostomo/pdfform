@@ -50,7 +50,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class ListCommand implements Command {
+public class ListCommand extends BaseCommand {
     private static final String OPT_S = "s";
     private static final String OPT_V = "v";
     private static final String OPT_H = "h";
@@ -59,10 +59,9 @@ public class ListCommand implements Command {
     private static boolean verbose;
     private static boolean help;
     private static String[] files;
-    private final String name;
 
     public ListCommand(String name, String[] args) throws ParseException {
-        this.name = name;
+        super(name);
 
         options = new Options();
         options.addOption(OPT_S, "separator", true, "Use the specified separator.");
@@ -150,9 +149,7 @@ public class ListCommand implements Command {
     }
 
     @Override
-    public void printUsage() {
-        System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
-        System.out.println("");
+    public void doPrintUsage() {
         System.out.println("Usage:");
         System.out.printf("  %s %s (option)* (-f field)+ path*%n", PDFForm.getProgramName(), getName());
         System.out.println("");
@@ -166,14 +163,6 @@ public class ListCommand implements Command {
                 System.out.printf("  -%s, --%s\t%s%n", opt.getOpt(), opt.getLongOpt(), opt.getDescription());
             }
         }
-
-        System.out.println("");
-        System.out.println("Report bugs to <enrico.m.crisostomo@gmail.com>.");
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override

@@ -51,7 +51,7 @@ import java.util.List;
  * @version 1.0.0
  * @since 1.0.0
  */
-public class DumpCommand implements Command {
+public class DumpCommand extends BaseCommand {
     private static final String OPT_S = "s";
     private static final String OPT_F = "f";
     private static final String OPT_V = "v";
@@ -64,10 +64,9 @@ public class DumpCommand implements Command {
     private static boolean verbose;
     private static boolean help;
     private static Options options;
-    private final String name;
 
     public DumpCommand(String name, String[] args) throws ParseException {
-        this.name = name;
+        super(name);
 
         options = new Options();
         options.addOption(OPT_S, "separator", true, "Use the specified separator.");
@@ -188,9 +187,7 @@ public class DumpCommand implements Command {
     }
 
     @Override
-    public void printUsage() {
-        System.out.printf("%s %s%n", PDFForm.getProgramName(), PDFForm.getProgramVersion());
-        System.out.println("");
+    public void doPrintUsage() {
         System.out.println("Usage:");
         System.out.printf("  %s %s (option)* (-f field)+ path*%n", PDFForm.getProgramName(), getName());
         System.out.println("");
@@ -204,13 +201,5 @@ public class DumpCommand implements Command {
                 System.out.printf("  -%s, --%s\t%s%n", opt.getOpt(), opt.getLongOpt(), opt.getDescription());
             }
         }
-
-        System.out.println("");
-        System.out.println("Report bugs to <enrico.m.crisostomo@gmail.com>.");
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 }
